@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Insufferable Soundboard v1.0</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            @font-face {
+                font-family: 'gabarito';
+                src: url('Gabarito-VariableFont_wght.ttf');
+            }
+            .mainHeader{
+                font-family: 'gabarito';
+                color: azure;
+            }
+            .buttonClass{
+                background-color: azure;
+            }
+    .button-7 {
+        background-color: #0095ff;
+        border: 1px solid transparent;
+        border-radius: 3px;
+        box-shadow: rgba(255, 255, 255, .4) 0 1px 0 0 inset;
+        box-sizing: border-box;
+        color: #fff;
+        cursor: pointer;
+        display: inline-block;
+        font-family: -apple-system,system-ui,"Segoe UI","Liberation Sans",sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.15385;
+        margin: 0;
+        outline: none;
+        padding: 8px .8em;
+        position: relative;
+        text-align: center;
+        text-decoration: none;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        vertical-align: baseline;
+        white-space: nowrap;
+        margin-right: 5px;
+        }
+
+        .button-7:hover,
+        .button-7:focus {
+        background-color: #07c;
+        }
+
+        .button-7:focus {
+        box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
+        }
+
+        .button-7:active {
+        background-color: #0064bd;
+        box-shadow: none;
+        }
+        </style>
+    </head>
+    <body style="background-color: rgb(47, 10, 86);">
+        <div style="display: flex;justify-content: center;height: 70px;background-color: rgb(54, 38, 232);border: 5px solid rgb(166, 160, 223);border-radius: 5px;">
+        <h1 class="mainHeader">The Insufferable Soundboard
+        </h1>
+        </div>
+        <h1 class="mainHeader" style="font-size: xx-large;">Sound Buttons</h1>
+        <!-- This is where the button appending is! -->
+         <section>
+         <div id="buttonSection" style="width: 800px;font-family: 'gabarito';color: rgb(232, 178, 39);font-size: xx-large;">Create some sounds!</div>
+        <script defer>
+            let sounds = {}
+            function nthIndexOf(str, char, n) {
+                let index = -1;
+                while (n-- > 0) {
+                index = str.indexOf(char, index + 1);
+            if (index === -1) break;
+            }
+            return index;
+        }  
+            function playSound(sound){
+                console.log(sound)
+                document.getElementById(sound).play()
+            }
+            function runOnLoad(){
+                buttons = localStorage.getItem('insufferableButtonStack')
+                if(localStorage.getItem('insufferableButtonStack') == null){
+                    localStorage.setItem('insufferableButtonStack', '')
+                    console.log('its null')
+                }
+                else if(buttons != ''){
+                    buttonSection = document.getElementById('buttonSection')
+                    buttonSection.textContent = ''
+                    iterationCt = buttons.split('#').length - 1
+                    // console.log(iterationCt)
+                    // console.log(buttons)
+                    for(let i = 0;i < iterationCt;i++){
+                        position1 = nthIndexOf(buttons, '#', i + 1)
+                        position2 = nthIndexOf(buttons, '$', i + 1)
+                        nameType = buttons.substring(position1, position2 + 1)
+                        console.log(nameType)
+                        position1 = nthIndexOf(buttons, '#', i + 1) + 2
+                        position2 = nthIndexOf(buttons, '*', i + 1)
+                        let linkType = buttons.substring(position1 - 1, position2)
+                        console.log(linkType)
+                        appendingDiv = document.getElementById('buttonSection')
+                        let newButton = document.createElement('button')
+                        newButton.classList.add('button-7')
+                        newButton.textContent = nameType
+                        freshAudio = document.createElement('audio')
+                        freshAudio.src = linkType
+                        freshAudio.type = 'audio/mpeg'
+                        freshAudio.setAttribute('hidden', 'hidden')
+                        // freshAudio.setAttribute('controls')
+                        freshAudio.id = linkType
+                        freshAudio.load()
+                        document.body.appendChild(freshAudio)
+                        newButton.addEventListener('click', function(){
+                            playSound(linkType)
+                        })
+                        appendingDiv.appendChild(newButton)
+                    }
+                }
+            }
+            onload = runOnLoad
+        </script>
+        <script>
+            function createNewButton(){
+                link = document.getElementById('buttonLinker').value
+                name = document.getElementById('buttonNamer').value
+                localStorage.setItem('insufferableButtonStack', localStorage.getItem('insufferableButtonStack') + '$' + name + '#' + link +  '*')
+            }
+        </script>
+        <h1 class="mainHeader">Create new Sounds</h1>
+        <input id="buttonLinker" class="button-7" placeholder="Button Internal Link">
+        <div style="height: 10px;"></div>
+        <input id="buttonNamer" class="button-7" placeholder="Button Name">
+        <div style="height: 25px;"></div>
+        <button class="button-7" onclick="createNewButton()">Create new Sound</button>
+        <script>
+            function removeLast(){
+                let buttons = localStorage.getItem('insufferableButtonStack')
+                finalIndex = buttons.lastIndexOf('$')
+                localStorage.setItem('insufferableButtonStack', buttons.substring(0, finalIndex))
+            }
+        </script>
+        <button class="button-7" onclick="removeLast()">Remove last Button</button>
+        </section>
+    </body>
+</html>
